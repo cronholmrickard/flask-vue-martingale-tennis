@@ -1,0 +1,68 @@
+version: '3'
+services:
+
+  flask:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    container_name: flask
+    restart: unless-stopped
+    environment:
+      APP_PORT: 5000
+      MONGODB_USERNAME: tennis
+      MONGODB_PASSWORD: tennis
+      MONGODB_DATABASE: tennisdb
+      MONGODB_HOSTNAME: mongodb
+      MONGODB_PORT: 27017
+    depends_on:
+      - mongodb
+    networks:
+      - frontend
+      - backend
+
+  mongodb:
+    image: mongo:4.0.8
+    container_name: mongodb
+    restart: unless-stopped
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongodbuser
+      MONGO_INITDB_ROOT_PASSWORD: your_mongodb_root_password
+      MONGO_INITDB_DATABASE: tennisdb
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodbdata:/data/db
+      - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - backend
+
+  webserver:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginxdata:/var/log/nginx
+    depends_on:
+      - flask
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  mongodbdata:
+    driver: local
+  nginxdata:
+    driver: local
