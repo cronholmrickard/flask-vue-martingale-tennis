@@ -16,10 +16,10 @@ def populate_db(filename="/var/www/data/wimbledon.pickle"):
             items = load(picklefile)
         for _id, item in enumerate(items):
             try:
-                db.tennisdb.insert_one(dict(item, **{"_id": _id}))
+                db.matches.insert_one(dict(item, **{"_id": _id}))
             except DuplicateKeyError:
                 pass
-        print(f"Items: {collection.estimated_document_count()}")
+        print(f"Items: {db.matches.estimated_document_count()}")
         try:
             os.unlink(filename)
         except FileNotFoundError:
@@ -31,7 +31,6 @@ application = Flask(__name__)
 application.config.from_object("configuration.TestingConfig")
 mongo = PyMongo(application)
 db = mongo.db
-collection = db.tennisdb
 # populate the db
 populate_db()
 api = Api(application)

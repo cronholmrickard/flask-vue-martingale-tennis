@@ -5,7 +5,7 @@ from random import shuffle
 from flask import jsonify
 from flask_restful import Resource, abort, reqparse
 
-from app import collection
+from app import db
 
 
 def popper(item: dict, key: str = "Winner") -> dict:
@@ -23,7 +23,7 @@ class Winner(Resource):
         parser.add_argument("id", type=int, required=True)
         pargs = parser.parse_args()
 
-        match = collection.find_one({"_id": pargs.id})
+        match = db.matches.find_one({"_id": pargs.id})
         if not match:
             abort(404, message=f"No match with id {pargs.id} in database")
         return jsonify(match[match["Winner"]])
@@ -38,7 +38,7 @@ class Match(Resource):
         parser.add_argument("id", type=int, required=True)
         pargs = parser.parse_args()
 
-        match = collection.find_one({"_id": pargs.id})
+        match = db.matches.find_one({"_id": pargs.id})
         if not match:
             abort(404, message=f"No match with id {pargs.id} in database")
         return jsonify(match)
@@ -52,12 +52,12 @@ class Matches(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("number", type=int, required=True)
         pargs = parser.parse_args()
-        _n_matches = collection.count_documents(filter={})
+        _n_matches = db.matches.count_documents(filter={})
         if pargs.number > _n_matches:
             abort(
                 406,
                 message=f"Too many mathces selected. Database contains {_n_matches} matches",
             )
-        data = list(collection.find())
+        data = list(db.matches.find())
         shuffle(data)
         return jsonify([popper(x) for x in data[: pargs.number]])
