@@ -40,6 +40,6 @@ CORS(application, resources={r"/*": {"origins": "*"}})
 
 from apis import Match, Matches, Winner  # pylint: disable=wrong-import-position
 
-api.add_resource(Match, "/match")
-api.add_resource(Winner, "/winner")
-api.add_resource(Matches, "/matches")
+api.add_resource(Match, "/api/match")
+api.add_resource(Winner, "/api/winner")
+api.add_resource(Matches, "/api/matches")
