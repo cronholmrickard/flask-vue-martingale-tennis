@@ -38,7 +38,6 @@ export default {
       axios.get(path + matchid)
         .then((res) => {
           this.match = res.data;
-          console.log(res.data);
         })
         .catch((error) => {
           // eslint-disable-next-line
