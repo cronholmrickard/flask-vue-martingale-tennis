@@ -8,12 +8,6 @@ from flask_restful import Resource, abort, reqparse
 from app import db
 
 
-def popper(item: dict, key: str = "Winner") -> dict:
-    """remove key winner from dict"""
-    _ = item.pop(key)
-    return item
-
-
 class Winner(Resource):
     """Get the winner of a match"""
 
@@ -39,13 +33,14 @@ class Match(Resource):
         pargs = parser.parse_args()
 
         match = db.matches.find_one({"_id": pargs.id})
+        _ = match.pop("Winner")  # we don't want you sneek peaking at winners
         if not match:
             abort(404, message=f"No match with id {pargs.id} in database")
         return jsonify(match)
 
 
 class Matches(Resource):
-    """Get a number of matches"""
+    """Get indices of a number of matches"""
 
     def get(self):  # pylint: disable=no-self-use
         """get method"""
@@ -60,4 +55,4 @@ class Matches(Resource):
             )
         data = list(db.matches.find())
         shuffle(data)
-        return jsonify([popper(x) for x in data[: pargs.number]])
+        return jsonify([x["_id"] for x in data[:pargs.number]])
