@@ -48,12 +48,24 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "5000:5000"
     volumes:
       - nginxdata:/var/log/nginx
     depends_on:
       - flask
+      - vue
     networks:
       - frontend
+
+  vue:
+      build:
+        context: client
+        dockerfile: Dockerfile
+      container_name: vue
+      restart: unless-stopped
+      command: npm run serve --public-host=172.17.0.1:80
+      networks:
+        - frontend
 
 networks:
   frontend:

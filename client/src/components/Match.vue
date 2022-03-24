@@ -34,10 +34,11 @@ export default {
   methods: {
     getMatch() {
       const matchid = this.$route.query.id;
-      const path = 'http://localhost/api/match?id=';
+      const path = 'http://172.17.0.1:5000/api/match?id=';
       axios.get(path + matchid)
         .then((res) => {
           this.match = res.data;
+          console.log(res.data);
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -49,6 +50,7 @@ export default {
     this.getMatch();
   },
 };
+
 </script>
 
 <style>
