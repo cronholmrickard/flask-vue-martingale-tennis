@@ -184,6 +184,8 @@ export default {
 
 .card {
   background: white;
+  border: 2px solid black !important;
+  border-radius: 15px !important;
 }
 
 .card-text {
@@ -198,6 +200,7 @@ export default {
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-gap: 50px;
+  align-items: flex-start;
 }
 
 .large {
