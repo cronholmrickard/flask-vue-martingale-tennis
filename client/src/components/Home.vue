@@ -43,7 +43,7 @@
                         <th>Ranking</th>
                         <th>Odds</th>
                       </tr>
-                      <tr  v-if="match.Home !== undefined">
+                      <tr v-if="match.Home !== undefined">
                         <td>{{ match["Home"]["Name"] }}</td>
                         <td>{{ match["Home"]["Rank"] }}</td>
                         <td>{{ parseFloat(match["Home"]["Odds"]).toFixed(2) }}</td>
