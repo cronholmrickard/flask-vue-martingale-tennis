@@ -37,7 +37,23 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-text">
-                    <button class="tennisball btn btn-primary" v-on:click="wonBet">Won</button>
+                    <table class="large" style="width:100%">
+                      <tr>
+                        <th style="width:50%">Player</th>
+                        <th>Ranking</th>
+                        <th>Odds</th>
+                      </tr>
+                      <tr  v-if="match.Home !== undefined">
+                        <td>{{ match["Home"]["Name"] }}</td>
+                        <td>{{ match["Home"]["Rank"] }}</td>
+                        <td>{{ parseFloat(match["Home"]["Odds"]).toFixed(2) }}</td>
+                      </tr>
+                      <tr v-if="match.Away !== undefined">
+                        <td>{{ match["Away"]["Name"] }}</td>
+                        <td>{{ match["Away"]["Rank"] }}</td>
+                        <td>{{ parseFloat(match["Away"]["Odds"]).toFixed(2) }}</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -79,25 +95,34 @@
 
 <script>
 
+import axios from 'axios';
 import BetStatClass from '../classes/BetStatClass';
 
 const betStat = new BetStatClass();
+let counter = 0;
 
 export default {
   data() {
     return {
       playing: false,
+      matches: '',
       bankRoll: '',
       roi: '',
       betsWon: '',
       betsLost: '',
+      match: '',
     };
   },
   methods: {
-    serve() {
+    async serve() {
+      // reset counterv
+      counter = 0;
       this.playing = true;
+      await this.getMatches();
+      // eslint-disable-next-line
       betStat.reset();
       this.updateBetStat();
+      await this.getMatch();
     },
     updateBetStat() {
       this.bankRoll = betStat.getBankRoll();
@@ -108,6 +133,32 @@ export default {
     wonBet() {
       betStat.wonBet(10, 1.5);
       this.updateBetStat();
+    },
+    async getMatches() {
+      const nMatches = 50;
+      const path = 'http://172.17.0.1:5000/api/matches?number=';
+      await axios.get(path + nMatches)
+        .then((res) => {
+          this.matches = res.data;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+    },
+    async getMatch() {
+      const path = 'http://172.17.0.1:5000/api/match?id=';
+      await axios.get(path + this.matches[counter])
+        .then((res) => {
+          this.match = res.data;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+      counter += 1;
+      // eslint-disable-next-line
+      console.log(counter);
     },
   },
 };
@@ -151,6 +202,7 @@ export default {
 
 .large {
   font-size: 125%;
+  margin: 0px;
 }
 
 .redtext {
