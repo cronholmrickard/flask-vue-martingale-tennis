@@ -24,63 +24,82 @@
               context of betting on tennis matches. Let's find out if you get bankrupted or
               break the bank. Serve whenever you are ready!
               </p>
-              <button class="tennisball btn btn-primary" v-on:click="serve">Serve</button>
+              <button class="tennisball btn btn-primary" v-on:click="serve">
+                Serve
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div :class="{ invisible: !playing}">
-        <div class="row align-items-center">
+      <div class="row align-items-center">
           <div class="col-12 mx-auto">
-            <div class="grid-container">
-              <div class="card">
-                <div class="card-body">
-                  <div class="card-text">
-                    <table class="large" style="width:100%">
-                      <tr>
-                        <th style="width:50%">Player</th>
-                        <th>Ranking</th>
-                        <th>Odds</th>
-                      </tr>
-                      <tr v-if="match.Home !== undefined">
-                        <td>{{ match["Home"]["Name"] }}</td>
-                        <td>{{ match["Home"]["Rank"] }}</td>
-                        <td>{{ parseFloat(match["Home"]["Odds"]).toFixed(2) }}</td>
-                      </tr>
-                      <tr v-if="match.Away !== undefined">
-                        <td>{{ match["Away"]["Name"] }}</td>
-                        <td>{{ match["Away"]["Rank"] }}</td>
-                        <td>{{ parseFloat(match["Away"]["Odds"]).toFixed(2) }}</td>
-                      </tr>
-                    </table>
+          <div class="grid-container">
+              <div :class="{ invisible: !showMatch}">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-text">
+                      <table class="large" style="width:100%">
+                          <tr>
+                            <th style="width:50%">Player</th>
+                            <th>Ranking</th>
+                            <th>Odds</th>
+                          </tr>
+                          <tr v-if="match.Home !== undefined">
+                            <td style="vertical-align: middle">{{ match["Home"]["Name"] }}</td>
+                            <td style="vertical-align: middle">{{ match["Home"]["Rank"] }}</td>
+                            <td>
+                              <button
+                              class="btn btn-primary"
+                              id="homeBtn"
+                              v-if="match.Home !== undefined"
+                              v-on:click="handleBet(match.Home)">
+                              {{ parseFloat(match["Home"]["Odds"]).toFixed(2) }}
+                              </button>
+                            </td>
+                          </tr>
+                          <tr v-if="match.Away !== undefined">
+                            <td style="vertical-align: middle">{{ match["Away"]["Name"] }}</td>
+                            <td style="vertical-align: middle">{{ match["Away"]["Rank"] }}</td>
+                            <td>
+                              <button
+                              class="btn btn-primary"
+                              id="awayBtn"
+                              v-if="match.Away !== undefined"
+                              v-on:click="handleBet(match.Away)">
+                              {{ parseFloat(match["Away"]["Odds"]).toFixed(2) }}
+                              </button>
+                            </td>
+                          </tr>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="card">
-                <div class="card-body">
-                  <div class="card-text">
-                    <table class="large">
-                      <tr>
-                       <td style="font-weight:600">Bakroll:</td>
-                       <td>${{ parseFloat(bankRoll).toFixed(2) }}</td>
-                      </tr>
-                      <tr>
-                       <td style="font-weight:600">ROI:</td>
-                       <td :class="roi < 0 ? 'redtext' : 'greentext'">
-                         {{ parseFloat(roi).toFixed(1) }}%
-                       </td>
-                      </tr>
-                      <tr>
-                       <td style="font-weight:600">Won Bets:</td>
-                       <td>{{ betsWon }}</td>
-                      </tr>
-                      <tr>
-                       <td style="font-weight:600">Lost Bets:</td>
-                       <td>{{ betsLost }}</td>
-                      </tr>
+              <div :class="{ invisible: !showRoi}">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-text">
+                      <table class="large">
+                        <tr>
+                          <td style="font-weight:600">Bakroll:</td>
+                          <td>${{ parseFloat(bankRoll).toFixed(2) }}</td>
+                        </tr>
+                        <tr>
+                          <td style="font-weight:600">ROI:</td>
+                          <td :class="roi < 0 ? 'redtext' : 'greentext'">
+                              {{ parseFloat(roi).toFixed(1) }}%
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="font-weight:600">Won Bets:</td>
+                          <td>{{ betsWon }}</td>
+                        </tr>
+                        <tr>
+                          <td style="font-weight:600">Lost Bets:</td>
+                          <td>{{ betsLost }}</td>
+                        </tr>
                     </table>
-
                   </div>
                 </div>
               </div>
@@ -97,6 +116,7 @@
 
 import axios from 'axios';
 import BetStatClass from '../classes/BetStatClass';
+import CurrentBet from '../classes/CurrentBet';
 
 const betStat = new BetStatClass();
 let counter = 0;
@@ -104,7 +124,8 @@ let counter = 0;
 export default {
   data() {
     return {
-      playing: false,
+      showRoi: false,
+      showMatch: false,
       matches: '',
       bankRoll: '',
       roi: '',
@@ -117,12 +138,36 @@ export default {
     async serve() {
       // reset counterv
       counter = 0;
-      this.playing = true;
+      this.showRoi = true;
+      this.showMatch = true;
       await this.getMatches();
-      // eslint-disable-next-line
       betStat.reset();
       this.updateBetStat();
       await this.getMatch();
+    },
+    async handleBet(backed) {
+      const wager = betStat.computeWager(backed.Odds);
+      const currentBet = new CurrentBet(this.matches[counter], backed);
+      await currentBet.getWinner();
+      if (currentBet.winner.Name === currentBet.backed.Name) {
+        betStat.wonBet(wager, currentBet.backed.Odds);
+      } else {
+        betStat.lostBet(wager);
+      }
+      this.updateBetStat();
+      // check for bankrupcy
+      if (betStat.BankRoll < 0) {
+        this.showMatch = false;
+        return;
+      }
+      // When everything is handled, update counter and get next
+      counter += 1;
+      if (counter < this.matches.length) {
+        await this.getMatch();
+      } else {
+        // no more matches
+        this.showMatch = false;
+      }
     },
     updateBetStat() {
       this.bankRoll = betStat.getBankRoll();
@@ -156,9 +201,6 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         });
-      counter += 1;
-      // eslint-disable-next-line
-      console.log(counter);
     },
   },
 };
@@ -214,6 +256,13 @@ export default {
 
 .greentext {
   color: green !important;
+}
+
+#homeBtn, #awayBtn{
+  background-color: #d37969 !important;
+  border: 2px solid black !important;
+  color: black !important;
+  border-radius: 15px !important;
 }
 
 </style>

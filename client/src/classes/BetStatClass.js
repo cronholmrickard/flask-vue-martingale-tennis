@@ -9,6 +9,10 @@ export default class BetStatClass {
 
     LostBets = 0;
 
+    AttemptedWinning = 50;
+
+    AccumulatedWager = 0;
+
     computeRoi() {
       this.Roi = (this.BankRoll - this.StartFund) / this.StartFund;
     }
@@ -17,6 +21,7 @@ export default class BetStatClass {
       this.BankRoll = 1000;
       this.WonBets = 0;
       this.LostBets = 0;
+      this.AccumulatedWager = 0;
       this.computeRoi();
     }
 
@@ -30,14 +35,16 @@ export default class BetStatClass {
     }
 
     wonBet(wager, odds) {
-      const winnings = wager * odds;
+      const winnings = wager * (odds - 1);
       this.WonBets += 1;
+      this.AccumulatedWager = 0;
       this.BankRoll += winnings;
       this.computeRoi();
     }
 
     lostBet(wager) {
       this.LostBets += 1;
+      this.AccumulatedWager += wager;
       this.BankRoll -= wager;
       this.computeRoi();
     }
@@ -48,5 +55,9 @@ export default class BetStatClass {
 
     getLostBets() {
       return this.LostBets;
+    }
+
+    computeWager(odds) {
+      return (this.AccumulatedWager + this.AttemptedWinning) / (odds - 1);
     }
 }
