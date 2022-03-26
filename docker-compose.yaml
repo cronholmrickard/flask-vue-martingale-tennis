@@ -17,8 +17,9 @@ services:
     depends_on:
       - mongodb
     networks:
-      - frontend
-      - backend
+      frontend:
+        ipv4_address: 10.0.1.100
+      backend:
 
   mongodb:
     image: mongo:4.0.8
@@ -39,42 +40,41 @@ services:
     networks:
       - backend
 
-  webserver:
+  frontend:
     build:
-      context: nginx
-      dockerfile: Dockerfile
-    container_name: webserver
+      context: client
+      dockerfile: Dockerfile.prod
+    container_name: frontend
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
       - "5000:5000"
     volumes:
-      - nginxdata:/var/log/nginx
+      - nginxconf:/etc/nginx/conf.d
     depends_on:
       - flask
-      - vue
+      - filepusher
     networks:
       - frontend
 
-  vue:
-      build:
-        context: client
-        dockerfile: Dockerfile
-      container_name: vue
-      restart: unless-stopped
-      command: npm run serve --public-host=172.17.0.1:80
-      networks:
-        - frontend
+  filepusher:
+    image: alpine:latest
+    volumes:
+      - nginxconf:/confs
+      - ./nginx/conf.d:/data
+    command: find /data -name "*.conf" -exec cp {} /confs/ \;
 
 networks:
   frontend:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
   backend:
     driver: bridge
 
 volumes:
   mongodbdata:
     driver: local
-  nginxdata:
+  nginxconf:
     driver: local

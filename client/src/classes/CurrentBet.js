@@ -13,7 +13,7 @@ export default class CurrentBet {
     }
 
     async getWinner() {
-      const path = 'http://172.17.0.1:5000/api/winner?id=';
+      const path = 'http://10.0.1.100:5000/api/winner?id=';
       await axios.get(path + this.matchid)
         .then((res) => {
           this.winner = res.data;

@@ -181,7 +181,7 @@ export default {
     },
     async getMatches() {
       const nMatches = 50;
-      const path = 'http://172.17.0.1:5000/api/matches?number=';
+      const path = 'http://10.0.1.100:5000/api/matches?number=';
       await axios.get(path + nMatches)
         .then((res) => {
           this.matches = res.data;
@@ -192,7 +192,7 @@ export default {
         });
     },
     async getMatch() {
-      const path = 'http://172.17.0.1:5000/api/match?id=';
+      const path = 'http://10.0.1.100:5000/api/match?id=';
       await axios.get(path + this.matches[counter])
         .then((res) => {
           this.match = res.data;
