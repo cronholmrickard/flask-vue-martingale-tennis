@@ -43,7 +43,7 @@ services:
   frontend:
     build:
       context: client
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     container_name: frontend
     restart: unless-stopped
     ports:
@@ -55,14 +55,15 @@ services:
       - flask
       - filepusher
     networks:
-      - frontend
+      frontend:
+        ipv4_address: 10.0.1.101
 
   filepusher:
     image: alpine:latest
     volumes:
       - nginxconf:/confs
       - ./nginx/conf.d:/data
-    command: find /data -name "*.conf" -exec cp {} /confs/ \;
+    command: find /data -mindepth 1 -maxdepth 1 -type f -exec cp {} /confs/ \;
 
 networks:
   frontend:
