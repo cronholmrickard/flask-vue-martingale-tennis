@@ -36,7 +36,7 @@ populate_db()
 api = Api(application)
 
 # enable CORS, very permissive
-CORS(application, resources={r"/*": {"origins": "*"}})
+CORS(application, resources={r"/api/*": {"origins": "*"}})
 
 from apis import Match, Matches, Winner  # pylint: disable=wrong-import-position
 
