@@ -9,7 +9,7 @@ export default class BetStatClass {
 
     LostBets = 0;
 
-    AttemptedWinning = 50;
+    AttemptedWinning = 100;
 
     AccumulatedWager = 0;
 

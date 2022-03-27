@@ -34,7 +34,7 @@
 
       <div class="row align-items-center">
           <div class="col-12 mx-auto">
-          <div class="grid-container">
+          <div class="grid-container grid-frame-2-1">
               <div :class="{ invisible: !showMatch}">
                 <div class="card">
                   <div class="card-body">
@@ -108,20 +108,51 @@
         </div>
       </div>
 
+    <div class="row align-items-center">
+          <div class="col-12 mx-auto">
+          <div class="grid-container grid-frame-2-1">
+              <div style="visibility: hidden;">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-text">
+                      pie-chart here
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div :class="{ invisible: !showRoi}">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="card-text">
+                      <reactive-line-chart
+                        :chart-data="chartData"
+                        :options="chartOptions">
+                      </reactive-line-chart>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
-
 <script>
 
 import axios from 'axios';
 import BetStatClass from '../classes/BetStatClass';
 import CurrentBet from '../classes/CurrentBet';
+import ReactiveLineChart from '../classes/ReactiveLineChart';
 
 const betStat = new BetStatClass();
 let counter = 0;
 
 export default {
+  components: {
+    ReactiveLineChart,
+  },
   data() {
     return {
       showRoi: false,
@@ -132,9 +163,53 @@ export default {
       betsWon: '',
       betsLost: '',
       match: '',
+      betArray: [0],
+      bankRollArray: [1000],
+      chartData: null,
+      chartOptions: {
+        legend: {
+          display: false,
+        },
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              labelString: 'Bets',
+              display: true,
+            },
+          }],
+          yAxes: [{
+            scaleLabel: {
+              labelString: 'Bankroll',
+              display: true,
+            },
+            ticks: {
+              suggestedMin: 0,
+              precision: 0,
+            },
+          }],
+        },
+      },
     };
   },
   methods: {
+    createChartData() {
+      this.betArray.push(counter);
+      this.bankRollArray.push(this.bankRoll);
+      this.chartData = {
+        labels: this.betArray,
+        datasets: [
+          {
+            label: 'Bankroll',
+            backgroundColor: 'transparent',
+            lineTension: 0,
+            borderWidth: 1,
+            borderColor: '#0000FF',
+            pointBackgroundColor: '#0000FF',
+            data: this.bankRollArray,
+          },
+        ],
+      };
+    },
     async serve() {
       // reset counterv
       counter = 0;
@@ -143,6 +218,10 @@ export default {
       await this.getMatches();
       betStat.reset();
       this.updateBetStat();
+      this.chartData = null;
+      this.betArray = [];
+      this.bankRollArray = [];
+      this.createChartData();
       await this.getMatch();
     },
     async handleBet(backed) {
@@ -155,13 +234,14 @@ export default {
         betStat.lostBet(wager);
       }
       this.updateBetStat();
+      // When everything is handled, update counter and get next
+      counter += 1;
+      this.createChartData();
       // check for bankrupcy
       if (betStat.BankRoll < 0) {
         this.showMatch = false;
         return;
       }
-      // When everything is handled, update counter and get next
-      counter += 1;
       if (counter < this.matches.length) {
         await this.getMatch();
       } else {
@@ -240,9 +320,16 @@ export default {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 2fr 1fr;
   grid-gap: 50px;
   align-items: flex-start;
+}
+
+.grid-frame-1-2 {
+  grid-template-columns: 1fr 2fr;
+}
+
+.grid-frame-2-1 {
+  grid-template-columns: 2fr 1fr;
 }
 
 .large {
