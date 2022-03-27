@@ -83,21 +83,22 @@
                       <table class="large">
                         <tr>
                           <td style="font-weight:600">Bakroll:</td>
-                          <td>${{ parseFloat(bankRoll).toFixed(2) }}</td>
+                          <td class="td-right">${{ parseFloat(bankRoll).toFixed(2) }}</td>
                         </tr>
                         <tr>
                           <td style="font-weight:600">ROI:</td>
-                          <td :class="roi < 0 ? 'redtext' : 'greentext'">
+                          <td class="td-right"
+                            :class="roi < 0 ? 'redtext' : 'greentext'">
                               {{ parseFloat(roi).toFixed(1) }}%
                           </td>
                         </tr>
                         <tr>
                           <td style="font-weight:600">Won Bets:</td>
-                          <td>{{ betsWon }}</td>
+                          <td class="td-right">{{ betsWon }}</td>
                         </tr>
                         <tr>
                           <td style="font-weight:600">Lost Bets:</td>
-                          <td>{{ betsLost }}</td>
+                          <td class="td-right">{{ betsLost }}</td>
                         </tr>
                     </table>
                   </div>
@@ -109,32 +110,41 @@
       </div>
 
     <div class="row align-items-center">
-          <div class="col-12 mx-auto">
-          <div class="grid-container grid-frame-2-1">
-              <div style="visibility: hidden;">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="card-text">
-                      pie-chart here
-                    </div>
-                  </div>
+      <div class="col-12 mx-auto">
+        <div class="grid-container grid-frame-1-1-1">
+          <div style="visibility: hidden;">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-text">
+                  pie-chart here
                 </div>
               </div>
-              <div :class="{ invisible: !showRoi}">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="card-text">
-                      <reactive-line-chart
-                        :chart-data="chartData"
-                        :options="chartOptions">
-                      </reactive-line-chart>
-                  </div>
+            </div>
+          </div>
+          <div style="visibility: hidden;">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-text">
+                  bar-chart here
+                </div>
+              </div>
+            </div>
+          </div>
+          <div :class="{ invisible: !showRoi}">
+            <div class="card" style="width: 100%;">
+              <div class="card-body">
+                <div class="card-text">
+                  <reactive-line-chart
+                    :chart-data="chartData"
+                    :options="chartOptions">
+                  </reactive-line-chart>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
     </div>
   </div>
@@ -324,8 +334,8 @@ export default {
   align-items: flex-start;
 }
 
-.grid-frame-1-2 {
-  grid-template-columns: 1fr 2fr;
+.grid-frame-1-1-1 {
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .grid-frame-2-1 {
@@ -335,6 +345,11 @@ export default {
 .large {
   font-size: 125%;
   margin: 0px;
+  width: 100%;
+}
+
+.td-right {
+  text-align: right;
 }
 
 .redtext {
