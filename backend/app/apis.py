@@ -56,3 +56,29 @@ class Matches(Resource):
         data = list(db.matches.find())
         shuffle(data)
         return jsonify([x["_id"] for x in data[:pargs.number]])
+
+
+class Results(Resource):
+    """Handle results"""
+
+    def __init__(self):
+        """constructor"""
+        self.collection = db.results
+        super().__init__()
+
+    def post(self):
+        """post method"""
+        parser = reqparse.RequestParser()
+        parser.add_argument("roi", type=float, required=True)
+        pargs = parser.parse_args()
+        self.collection.insert_one({"roi": pargs.roi})
+
+    def get(self):
+        """get method"""
+        data = [x["roi"] for x in self.collection.find()]
+        return jsonify(
+            {
+                "rois": data,
+                "positive": len(list(filter(lambda x : x >= 0, data)))
+            }
+        )

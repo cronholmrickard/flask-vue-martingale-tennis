@@ -38,8 +38,9 @@ api = Api(application)
 # enable CORS, very permissive
 CORS(application, resources={r"/api/*": {"origins": "*"}})
 
-from apis import Match, Matches, Winner  # pylint: disable=wrong-import-position
+from apis import Match, Matches, Winner, Results  # pylint: disable=wrong-import-position
 
 api.add_resource(Match, "/api/match")
 api.add_resource(Winner, "/api/winner")
 api.add_resource(Matches, "/api/matches")
+api.add_resource(Results, "/api/results")
