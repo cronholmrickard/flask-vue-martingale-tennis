@@ -76,9 +76,10 @@ class Results(Resource):
     def get(self):
         """get method"""
         data = [x["roi"] for x in self.collection.find()]
+        _positive = len(list(filter(lambda x : x >= 0, data)))
         return jsonify(
             {
-                "rois": data,
-                "positive": len(list(filter(lambda x : x >= 0, data)))
+                "negative": len(data) - _positive,
+                "positive": _positive
             }
         )

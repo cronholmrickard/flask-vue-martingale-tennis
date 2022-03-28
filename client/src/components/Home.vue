@@ -227,7 +227,7 @@ export default {
       this.pieData = {
         labels: ['Bankrpupcy', 'Wins'],
         datasets: [{
-          data: [roiData.rois.length - roiData.positive, roiData.positive],
+          data: [roiData.negative, roiData.positive],
           backgroundColor: [
             'rgba(255, 0, 0, 1.0)',
             'rgba(0, 0, 255, 1.0)',
