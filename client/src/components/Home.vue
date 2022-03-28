@@ -233,10 +233,10 @@ export default {
             'rgba(0, 0, 255, 1.0)',
           ],
           borderColor: [
-            'rgba(255, 0, 0, 0.5)',
-            'rgba(0, 0, 255, 0.5)',
+            'rgba(255, 255, 255, 1.0)',
+            'rgba(255, 255, 255, 1.0)',
           ],
-          borderWidth: 1,
+          borderWidth: 5,
         }],
       };
     },
