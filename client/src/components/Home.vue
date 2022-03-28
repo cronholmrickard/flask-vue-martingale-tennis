@@ -111,21 +111,16 @@
 
     <div class="row align-items-center">
       <div class="col-12 mx-auto">
-        <div class="grid-container grid-frame-1-1-1">
-          <div style="visibility: hidden;">
+        <div class="grid-container grid-frame-1-2">
+          <div :class="{ invisible: !showStat}">
             <div class="card">
               <div class="card-body">
                 <div class="card-text">
-                  pie-chart here
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style="visibility: hidden;">
-            <div class="card">
-              <div class="card-body">
-                <div class="card-text">
-                  bar-chart here
+                  <h4 class="card-title" style="text-align: center;">Historical results</h4>
+                  <reactive-pie-chart
+                    :chart-data="pieData"
+                    :options="pieOptions">
+                  </reactive-pie-chart>
                 </div>
               </div>
             </div>
@@ -155,6 +150,7 @@ import axios from 'axios';
 import BetStatClass from '../classes/BetStatClass';
 import CurrentBet from '../classes/CurrentBet';
 import ReactiveLineChart from '../classes/ReactiveLineChart';
+import ReactivePieChart from '../classes/ReactivePieChart';
 
 const betStat = new BetStatClass();
 let counter = 0;
@@ -162,11 +158,13 @@ let counter = 0;
 export default {
   components: {
     ReactiveLineChart,
+    ReactivePieChart,
   },
   data() {
     return {
       showRoi: false,
       showMatch: false,
+      showStat: false,
       matches: '',
       bankRoll: '',
       roi: '',
@@ -175,6 +173,10 @@ export default {
       match: '',
       betArray: [0],
       bankRollArray: [1000],
+      pieData: null,
+      pieOptions: {
+        cutoutPercentage: 40,
+      },
       chartData: null,
       chartOptions: {
         legend: {
@@ -220,11 +222,30 @@ export default {
         ],
       };
     },
+    createPieData(roiData) {
+      // create data for pie chart
+      this.pieData = {
+        labels: ['Bankrpupcy', 'Wins'],
+        datasets: [{
+          data: [roiData.rois.length - roiData.positive, roiData.positive],
+          backgroundColor: [
+            'rgba(255, 0, 0, 1.0)',
+            'rgba(0, 0, 255, 1.0)',
+          ],
+          borderColor: [
+            'rgba(255, 0, 0, 0.5)',
+            'rgba(0, 0, 255, 0.5)',
+          ],
+          borderWidth: 1,
+        }],
+      };
+    },
     async serve() {
       // reset counterv
       counter = 0;
       this.showRoi = true;
       this.showMatch = true;
+      this.showStat = false;
       await this.getMatches();
       betStat.reset();
       this.updateBetStat();
@@ -250,6 +271,7 @@ export default {
       // check for bankrupcy
       if (betStat.BankRoll < 0) {
         this.showMatch = false;
+        this.pushShowStat();
         return;
       }
       if (counter < this.matches.length) {
@@ -257,6 +279,7 @@ export default {
       } else {
         // no more matches
         this.showMatch = false;
+        await this.pushShowStat();
       }
     },
     updateBetStat() {
@@ -291,6 +314,28 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         });
+    },
+    async updateResultStats() {
+      const path = 'http://10.0.1.100:5000/api/results';
+      let results = null;
+      await axios.get(path)
+        .then((res) => {
+          results = res.data;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
+      this.createPieData(results);
+    },
+    async pushShowStat() {
+      await this.pushRoi();
+      await this.updateResultStats();
+      this.showStat = true;
+    },
+    async pushRoi() {
+      const path = 'http://10.0.1.100:5000/api/results?roi=';
+      await axios.post(path + this.roi);
     },
   },
 };
@@ -334,8 +379,8 @@ export default {
   align-items: flex-start;
 }
 
-.grid-frame-1-1-1 {
-  grid-template-columns: 1fr 1fr 1fr;
+.grid-frame-1-2 {
+  grid-template-columns: 1fr 2fr;
 }
 
 .grid-frame-2-1 {
