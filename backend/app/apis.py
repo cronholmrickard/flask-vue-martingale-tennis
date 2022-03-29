@@ -14,7 +14,7 @@ class Winner(Resource):
     def get(self):  # pylint: disable=no-self-use
         """get method"""
         parser = reqparse.RequestParser()
-        parser.add_argument("id", type=int, required=True)
+        parser.add_argument("id", type=str, required=True)
         pargs = parser.parse_args()
 
         match = db.matches.find_one({"_id": pargs.id})
@@ -29,7 +29,7 @@ class Match(Resource):
     def get(self):  # pylint: disable=no-self-use
         """get method"""
         parser = reqparse.RequestParser()
-        parser.add_argument("id", type=int, required=True)
+        parser.add_argument("id", type=str, required=True)
         pargs = parser.parse_args()
 
         match = db.matches.find_one({"_id": pargs.id})
