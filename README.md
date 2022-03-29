@@ -12,8 +12,8 @@ The application stack can be run locally through;
 When run locally, the application can be accessed at [localhost](http://localhost).
 
 ## Instructions
-The application is an interactive experience, where the user places bets on tennis matches. Bets are placed by clicking the odds of the preferred player.
-(![Screenshot](https://raw.githubusercontent.com/cronholmrickard/flask-vue-martingale-tennis/main/screenshots/place_bet.png))
+The application is an interactive experience, where the user places bets on tennis matches. Bets are placed by clicking the odds of the preferred player. Note that in tennis, lower ranking is better.
+![Screenshot](https://raw.githubusercontent.com/cronholmrickard/flask-vue-martingale-tennis/main/screenshots/place_bet.png)
 
 At the end of a game (either after 50 bets or earlier if you get bankrupted), the historical distribution of bankrupcies/wins will be displayed.
 
