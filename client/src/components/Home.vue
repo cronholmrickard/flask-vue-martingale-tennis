@@ -154,6 +154,8 @@ import ReactivePieChart from '../classes/ReactivePieChart';
 
 const betStat = new BetStatClass();
 let counter = 0;
+const nMatches = 50;
+const apiUrl = 'http://10.0.1.100:5000/api/';
 
 export default {
   components: {
@@ -246,19 +248,19 @@ export default {
       this.showRoi = true;
       this.showMatch = true;
       this.showStat = false;
-      await this.getMatches();
+      await this.getMatches(apiUrl, nMatches);
       betStat.reset();
       this.updateBetStat();
       this.chartData = null;
       this.betArray = [];
       this.bankRollArray = [];
       this.createChartData();
-      await this.getMatch();
+      await this.getMatch(apiUrl);
     },
     async handleBet(backed) {
       const wager = betStat.computeWager(backed.Odds);
       const currentBet = new CurrentBet(this.matches[counter], backed);
-      await currentBet.getWinner();
+      await currentBet.determineWinner(apiUrl);
       if (currentBet.winner.Name === currentBet.backed.Name) {
         betStat.wonBet(wager, currentBet.backed.Odds);
       } else {
@@ -275,7 +277,7 @@ export default {
         return;
       }
       if (counter < this.matches.length) {
-        await this.getMatch();
+        await this.getMatch(apiUrl);
       } else {
         // no more matches
         this.showMatch = false;
@@ -292,10 +294,9 @@ export default {
       betStat.wonBet(10, 1.5);
       this.updateBetStat();
     },
-    async getMatches() {
-      const nMatches = 50;
-      const path = 'http://10.0.1.100:5000/api/matches?number=';
-      await axios.get(path + nMatches)
+    async getMatches(url, numMatches) {
+      const path = 'matches?number=';
+      await axios.get(url + path + numMatches)
         .then((res) => {
           this.matches = res.data;
         })
@@ -304,9 +305,9 @@ export default {
           console.error(error);
         });
     },
-    async getMatch() {
-      const path = 'http://10.0.1.100:5000/api/match?id=';
-      await axios.get(path + this.matches[counter])
+    async getMatch(url) {
+      const path = 'match?id=';
+      await axios.get(url + path + this.matches[counter])
         .then((res) => {
           this.match = res.data;
         })
@@ -315,10 +316,10 @@ export default {
           console.error(error);
         });
     },
-    async updateResultStats() {
-      const path = 'http://10.0.1.100:5000/api/results';
+    async updateResultStats(url) {
+      const path = 'results';
       let results = null;
-      await axios.get(path)
+      await axios.get(url + path)
         .then((res) => {
           results = res.data;
         })
@@ -329,13 +330,13 @@ export default {
       this.createPieData(results);
     },
     async pushShowStat() {
-      await this.pushRoi();
-      await this.updateResultStats();
+      await this.pushRoi(apiUrl);
+      await this.updateResultStats(apiUrl);
       this.showStat = true;
     },
-    async pushRoi() {
-      const path = 'http://10.0.1.100:5000/api/results?roi=';
-      await axios.post(path + this.roi);
+    async pushRoi(url) {
+      const path = 'results?roi=';
+      await axios.post(url + path + this.roi);
     },
   },
 };

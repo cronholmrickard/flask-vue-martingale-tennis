@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default class CurrentBet {
-    matchid = null;
+    #matchid = null;
 
     winner = null;
 
@@ -12,9 +12,9 @@ export default class CurrentBet {
       this.backed = backed;
     }
 
-    async getWinner() {
-      const path = 'http://10.0.1.100:5000/api/winner?id=';
-      await axios.get(path + this.matchid)
+    async determineWinner(url) {
+      const path = 'winner?id=';
+      await axios.get(url + path + this.matchid)
         .then((res) => {
           this.winner = res.data;
         })

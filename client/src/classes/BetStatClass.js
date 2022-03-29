@@ -1,17 +1,17 @@
 export default class BetStatClass {
     StartFund = 1000;
 
-    BankRoll = 1000;
+    #BankRoll = 1000;
 
-    Roi = null;
+    #Roi = null;
 
-    WonBets = 0;
+    #WonBets = 0;
 
-    LostBets = 0;
+    #LostBets = 0;
 
     AttemptedWinning = 100;
 
-    AccumulatedWager = 0;
+    #AccumulatedWager = 0;
 
     computeRoi() {
       this.Roi = (this.BankRoll - this.StartFund) / this.StartFund;
