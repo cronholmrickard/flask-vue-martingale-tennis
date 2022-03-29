@@ -39,6 +39,13 @@
                 <div class="card">
                   <div class="card-body">
                     <div class="card-text">
+                      <table v-if="match.Info !== undefined" style="width: 80%">
+                        <tr>
+                          <td v-for="item in infoOrder" v-bind:key="item">
+                            {{ match.Info[item] }}
+                          </td>
+                        </tr>
+                      </table>
                       <table class="large" style="width:100%">
                           <tr>
                             <th style="width:50%">Player</th>
@@ -164,6 +171,13 @@ export default {
   },
   data() {
     return {
+      infoOrder: [
+        'Date',
+        'Tournament',
+        'Round',
+        'Court',
+        'Surface',
+      ],
       showRoi: false,
       showMatch: false,
       showStat: false,
