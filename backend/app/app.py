@@ -1,6 +1,4 @@
 """Flask application init"""
-import os
-from pickle import load
 
 from flask import Flask
 from flask_pymongo import PyMongo

@@ -91,7 +91,7 @@ class DataPopulator:
                 data_items.append(_data)
 
         self.data_items += data_items
-        return True if data_items else False
+        return bool(data_items)
 
     def populate(self, collection):
         """push data items to collection"""
