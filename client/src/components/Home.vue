@@ -1,14 +1,12 @@
 <template>
-  <div class="background">
-    <div class="container">
-
-      <div class="row align-items-center">
-        <div class="col-12 mx-auto">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title">Martingale Demonstrator</h4>
-              <h5 class="card-subtitle mb-2 text-muted">Tennis</h5>
-              <p class="card-text">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 mx-auto">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Martingale Demonstrator</h4>
+            <h5 class="card-subtitle mb-2 text-muted">Tennis</h5>
+            <p class="card-text">
               Considering a coin toss, the matringale betting strategy is designed for a game in
                   which the gambler wins their stake if a coin comes up heads and loses it if the
               coin comes up tails.
@@ -18,103 +16,102 @@
               probability of eventually flipping heads approaches 1, which makes the martingale
               betting strategy seem like a sure thing. However, the exponential growth of the
               bets eventually bankrupts its users due to finite bankrolls.
-              </p>
-              <p class="card-text">
+            </p>
+            <p class="card-text">
               In this interactive exercise, we will explore the martingale strategy in the
               context of betting on tennis matches. Let's find out if you get bankrupted or
               break the bank. Serve whenever you are ready!
-              </p>
-              <button class="tennisball btn btn-primary" v-on:click="serve">
-                Serve
-              </button>
-            </div>
+            </p>
+            <button class="tennisball btn btn-primary" v-on:click="serve">
+              Serve
+            </button>
           </div>
         </div>
       </div>
-
-      <div class="row align-items-center">
-          <div class="col-12 mx-auto">
-          <div class="grid-container grid-frame-2-1">
-              <div :class="{ invisible: !showMatch}">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="card-text">
-                      <table v-if="match.Info !== undefined" style="width: 80%">
-                        <tr>
-                          <td v-for="item in infoOrder" v-bind:key="item">
-                            {{ match.Info[item] }}
-                          </td>
-                        </tr>
-                      </table>
-                      <table class="large" style="width:100%">
-                          <tr>
-                            <th style="width:50%">Player</th>
-                            <th>Ranking</th>
-                            <th>Odds</th>
-                          </tr>
-                          <tr v-if="match.Home !== undefined">
-                            <td style="vertical-align: middle">{{ match["Home"]["Name"] }}</td>
-                            <td style="vertical-align: middle">{{ match["Home"]["Rank"] }}</td>
-                            <td>
-                              <button
-                              class="btn btn-primary"
-                              id="homeBtn"
-                              v-if="match.Home !== undefined"
-                              v-on:click="handleBet(match.Home)">
-                              {{ parseFloat(match["Home"]["Odds"]).toFixed(2) }}
-                              </button>
-                            </td>
-                          </tr>
-                          <tr v-if="match.Away !== undefined">
-                            <td style="vertical-align: middle">{{ match["Away"]["Name"] }}</td>
-                            <td style="vertical-align: middle">{{ match["Away"]["Rank"] }}</td>
-                            <td>
-                              <button
-                              class="btn btn-primary"
-                              id="awayBtn"
-                              v-if="match.Away !== undefined"
-                              v-on:click="handleBet(match.Away)">
-                              {{ parseFloat(match["Away"]["Odds"]).toFixed(2) }}
-                              </button>
-                            </td>
-                          </tr>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div :class="{ invisible: !showRoi}">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="card-text">
-                      <table class="large">
-                        <tr>
-                          <td style="font-weight:600">Bakroll:</td>
-                          <td class="td-right">${{ parseFloat(bankRoll).toFixed(2) }}</td>
-                        </tr>
-                        <tr>
-                          <td style="font-weight:600">ROI:</td>
-                          <td class="td-right"
-                            :class="roi < 0 ? 'redtext' : 'greentext'">
-                              {{ parseFloat(roi).toFixed(1) }}%
-                          </td>
-                        </tr>
-                        <tr>
-                          <td style="font-weight:600">Won Bets:</td>
-                          <td class="td-right">{{ betsWon }}</td>
-                        </tr>
-                        <tr>
-                          <td style="font-weight:600">Lost Bets:</td>
-                          <td class="td-right">{{ betsLost }}</td>
-                        </tr>
-                    </table>
-                  </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-12 mx-auto">
+        <div class="grid-container grid-frame-2-1">
+          <div :class="{ invisible: !showMatch}">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-text">
+                  <table v-if="match.Info !== undefined" style="width: 80%">
+                    <tr>
+                      <td v-for="item in infoOrder" v-bind:key="item">
+                        {{ match.Info[item] }}
+                      </td>
+                    </tr>
+                  </table>
+                  <table class="large" style="width:100%">
+                    <tr>
+                      <th style="width:50%">Player</th>
+                      <th>Ranking</th>
+                      <th>Odds</th>
+                    </tr>
+                    <tr v-if="match.Home !== undefined">
+                      <td style="vertical-align: middle">{{ match["Home"]["Name"] }}</td>
+                      <td style="vertical-align: middle">{{ match["Home"]["Rank"] }}</td>
+                      <td>
+                        <button
+                        class="btn btn-primary"
+                        id="homeBtn"
+                        v-if="match.Home !== undefined"
+                        v-on:click="handleBet(match.Home)">
+                          {{ parseFloat(match["Home"]["Odds"]).toFixed(2) }}
+                        </button>
+                      </td>
+                    </tr>
+                    <tr v-if="match.Away !== undefined">
+                      <td style="vertical-align: middle">{{ match["Away"]["Name"] }}</td>
+                      <td style="vertical-align: middle">{{ match["Away"]["Rank"] }}</td>
+                      <td>
+                        <button
+                        class="btn btn-primary"
+                        id="awayBtn"
+                        v-if="match.Away !== undefined"
+                        v-on:click="handleBet(match.Away)">
+                          {{ parseFloat(match["Away"]["Odds"]).toFixed(2) }}
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
+          <div :class="{ invisible: !showRoi}">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-text">
+                  <table class="large">
+                    <tr>
+                      <td style="font-weight:600">Bakroll:</td>
+                      <td class="td-right">${{ parseFloat(bankRoll).toFixed(2) }}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:600">ROI:</td>
+                      <td class="td-right"
+                      :class="roi < 0 ? 'redtext' : 'greentext'">
+                        {{ parseFloat(roi).toFixed(1) }}%
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:600">Won Bets:</td>
+                      <td class="td-right">{{ betsWon }}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:600">Lost Bets:</td>
+                      <td class="td-right">{{ betsLost }}</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
 
     <div class="row align-items-center">
       <div class="col-12 mx-auto">
@@ -125,8 +122,8 @@
                 <div class="card-text">
                   <h4 class="card-title" style="text-align: center;">Historical results</h4>
                   <reactive-pie-chart
-                    :chart-data="pieData"
-                    :options="pieOptions">
+                  :chart-data="pieData"
+                  :options="pieOptions">
                   </reactive-pie-chart>
                 </div>
               </div>
@@ -137,8 +134,8 @@
               <div class="card-body">
                 <div class="card-text">
                   <reactive-line-chart
-                    :chart-data="chartData"
-                    :options="chartOptions">
+                  :chart-data="chartData"
+                  :options="chartOptions">
                   </reactive-line-chart>
                 </div>
               </div>
@@ -147,10 +144,9 @@
         </div>
       </div>
     </div>
-
-    </div>
   </div>
 </template>
+
 <script>
 
 import axios from 'axios';
@@ -382,10 +378,6 @@ export default {
 
 .card-text {
   text-align: left;
-}
-
-.background {
-  background: url('../assets/tenniscourt.jpg') no-repeat center center / cover
 }
 
 .grid-container {
