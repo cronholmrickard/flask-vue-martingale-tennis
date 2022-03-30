@@ -18,5 +18,6 @@ The application is an interactive experience, where the user places bets on tenn
 At the end of a game (either after 50 bets or earlier if you get bankrupted), the historical distribution of bankrupcies/wins will be displayed.
 
 ### Development log
+- __2021-03-31__: Added navigation to frontend
 - __2021-03-30__: Added functionality for adding tournament data
 - __2021-03-28__: First fully functional version pushed.

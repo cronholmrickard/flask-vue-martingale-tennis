@@ -14,6 +14,7 @@ RUN npm install --silent && \
     npm install -g @vue/cli@4.5.11 && \
     npm install axios@0.21.1 --save && \
     npm install bootstrap@4.6.0 --save && \
+    npm install bootstrap-icons@1.8.1 --save && \
     npm install chart.js@2.9.4 --save && \
     npm install vue-chartjs@3.2.1 --save && \
     npm install vue2-dropzone@3.6.0 --save && \
