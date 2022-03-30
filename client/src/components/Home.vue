@@ -36,23 +36,23 @@
             <div class="card">
               <div class="card-body">
                 <div class="card-text">
-                  <table v-if="match.Info !== undefined" style="width: 80%">
-                    <tr>
-                      <td v-for="item in infoOrder" v-bind:key="item">
-                        {{ match.Info[item] }}
-                      </td>
+                  <table v-if="match.Info !== undefined" style="width: 100%">
+                    <tr v-for="item in infoOrder" v-bind:key="item">
+                      <td>{{ item }}:</td>
+                      <td class="td-right">{{ match.Info[item] }}</td>
                     </tr>
                   </table>
+                  <hr>
                   <table class="large" style="width:100%">
                     <tr>
                       <th style="width:50%">Player</th>
                       <th>Ranking</th>
-                      <th>Odds</th>
+                      <th class="td-right" style="padding-right: 5px;">Odds</th>
                     </tr>
                     <tr v-if="match.Home !== undefined">
                       <td style="vertical-align: middle">{{ match["Home"]["Name"] }}</td>
                       <td style="vertical-align: middle">{{ match["Home"]["Rank"] }}</td>
-                      <td>
+                      <td class="td-right">
                         <button
                         class="btn btn-primary"
                         id="homeBtn"
@@ -65,7 +65,7 @@
                     <tr v-if="match.Away !== undefined">
                       <td style="vertical-align: middle">{{ match["Away"]["Name"] }}</td>
                       <td style="vertical-align: middle">{{ match["Away"]["Rank"] }}</td>
-                      <td>
+                      <td class="td-right">
                         <button
                         class="btn btn-primary"
                         id="awayBtn"
@@ -188,6 +188,7 @@ export default {
       pieData: null,
       pieOptions: {
         cutoutPercentage: 40,
+        rotation: Math.PI,
       },
       chartData: null,
       chartOptions: {
