@@ -38,7 +38,7 @@ class DataPopulator:
         csv_files = glob(_searchpath, recursive=recursive)
         return cls(csv_files)
 
-    def parse(self):
+    def parse(self) -> bool:
         """Parse csv files to data items"""
         header = []
         rawdata = []
@@ -56,6 +56,7 @@ class DataPopulator:
                 pass
 
         # convert to useful structure
+        data_items = []
         for item in rawdata:
             try:
                 _odds = sorted([float(item[x]) for x in ("PSW", "PSL")])
@@ -87,7 +88,10 @@ class DataPopulator:
                     "Winner": "Home" if cointoss == 0 else "Away",
                 }
                 _data["_id"] = get_sha(_data["Info"], item["Winner"], item["Loser"])
-                self.data_items.append(_data)
+                data_items.append(_data)
+
+        self.data_items += data_items
+        return True if data_items else False
 
     def populate(self, collection):
         """push data items to collection"""

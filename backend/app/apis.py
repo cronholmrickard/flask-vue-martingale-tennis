@@ -94,7 +94,11 @@ class Tournament(MatchData):
             filepath = os.path.join(tmpdir, filename)
             _file.save(filepath)
             populator = DataPopulator([filepath])
-            populator.parse()
+            if not populator.parse():
+                abort(
+                    422,
+                    message="Incorrect content of data."
+                )
             populator.populate(self.collection)
         return Response(f"Tournament data from {filename} added to database\n", status=201)
 
