@@ -1,11 +1,16 @@
 """Defines RESTful routes"""
 
+import os
 from random import shuffle
+from tempfile import TemporaryDirectory
 
-from flask import jsonify
+from flask import jsonify, request, Response
 from flask_restful import Resource, abort, reqparse
+from werkzeug.utils import secure_filename
+from werkzeug.exceptions import BadRequestKeyError
 
 from app import db
+from handle_tennis_data import DataPopulator
 
 
 class MatchData(Resource):
@@ -67,6 +72,33 @@ class Matches(MatchData):
         return jsonify([x["_id"] for x in data[:pargs.number]])
 
 
+class Tournament(MatchData):
+    """Handle tournamet data"""
+
+    def post(self):
+        """post method"""
+        try:
+            _file = request.files["tournament"]
+        except BadRequestKeyError:
+            abort(
+                400,
+                message="No tournament file was supplied in the form."
+            )
+        if not _file.filename.endswith(".csv"):
+            abort(
+                415,
+                message="Only csv files are accepted."
+            )
+        filename = secure_filename(_file.filename)
+        with TemporaryDirectory() as tmpdir:
+            filepath = os.path.join(tmpdir, filename)
+            _file.save(filepath)
+            populator = DataPopulator([filepath])
+            populator.parse()
+            populator.populate(self.collection)
+        return Response(f"Tournament data from {filename} added to database\n", status=201)
+
+
 class Results(Resource):
     """Handle results"""
 
@@ -92,3 +124,4 @@ class Results(Resource):
                 "positive": _positive
             }
         )
+

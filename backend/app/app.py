@@ -24,9 +24,17 @@ data_populator = DataPopulator.from_dir("/var/www/data/")
 data_populator.parse()
 data_populator.populate(db.matches)
 
-from apis import Match, Matches, Winner, Results  # pylint: disable=wrong-import-position
+# register api endpoints
+from apis import (
+    Match,
+    Matches,
+    Winner,
+    Results,
+    Tournament,
+)  # pylint: disable=wrong-import-position
 
 api.add_resource(Match, "/api/match")
 api.add_resource(Winner, "/api/winner")
 api.add_resource(Matches, "/api/matches")
 api.add_resource(Results, "/api/results")
+api.add_resource(Tournament, "/api/tournament")
