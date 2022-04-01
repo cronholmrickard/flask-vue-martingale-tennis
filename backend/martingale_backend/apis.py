@@ -9,8 +9,8 @@ from flask_restful import Resource, abort, reqparse
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import BadRequestKeyError
 
-from app import db
-from handle_tennis_data import DataPopulator
+from martingale_backend import DataPopulator
+from martingale_backend.exts import mongo
 
 
 class MatchData(Resource):
@@ -18,7 +18,7 @@ class MatchData(Resource):
 
     def __init__(self):
         """constructor"""
-        self.collection = db.matches
+        self.collection = mongo.db.matches
         super().__init__()
 
 
@@ -108,7 +108,7 @@ class Results(Resource):
 
     def __init__(self):
         """constructor"""
-        self.collection = db.results
+        self.collection = mongo.db.results
         super().__init__()
 
     def post(self):
