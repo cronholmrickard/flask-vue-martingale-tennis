@@ -41,7 +41,7 @@ def create_app(config: str="Testing") -> Flask:
     """Create the application"""
     app = Flask(__name__)
     app.config.from_object(f"martingale_backend.configuration.{config}Config")
-    register_extensions(app)
     register_endpoints()
+    register_extensions(app)
     populate_db()
     return app
