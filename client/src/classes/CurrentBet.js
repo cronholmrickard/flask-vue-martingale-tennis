@@ -3,13 +3,19 @@ import axios from 'axios';
 export default class CurrentBet {
     #matchid = null;
 
-    winner = null;
+    #winner = null;
 
-    backed = null;
+    #backed = null;
+
+    #won = null;
 
     constructor(matchid, backed) {
       this.matchid = matchid;
       this.backed = backed;
+    }
+
+    getWon() {
+      return this.won;
     }
 
     async determineWinner(url) {
@@ -22,5 +28,10 @@ export default class CurrentBet {
           // eslint-disable-next-line
           console.error(error);
         });
+      if (this.winner.Name === this.backed.Name) {
+        this.won = true;
+      } else {
+        this.won = false;
+      }
     }
 }

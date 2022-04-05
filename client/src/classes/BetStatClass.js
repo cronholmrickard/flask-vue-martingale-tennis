@@ -25,6 +25,17 @@ export default class BetStatClass {
       this.computeRoi();
     }
 
+    getData() {
+      // return data as object
+      this.computeRoi();
+      return {
+        bankRoll: this.getBankRoll(),
+        roi: this.getRoi(),
+        won: this.getWonBets(),
+        lost: this.getLostBets(),
+      };
+    }
+
     getBankRoll() {
       return this.BankRoll;
     }

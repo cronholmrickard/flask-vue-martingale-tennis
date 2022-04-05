@@ -1,36 +1,28 @@
 <template>
   <div id="app">
     <div class="background">
-      <div id="nav">
-        <nav class="container navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="https://github.com/cronholmrickard/flask-vue-martingale-tennis"><i class="bi bi-github"></i></a>
-            <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <div class="navbar-nav mr-auto">
-                <router-link to="/" class="nav-item nav-link">
-                  Home
-                </router-link>
-                <router-link to="/Upload" class="nav-item nav-link">
-                  Upload tournament
-                </router-link>
-              </div>
-            </div>
-            <span id="copyright">Rickard Cronholm, 2022</span>
-          </nav>
+      <div class="container">
+        <div class="col-12 mx-auto black-border border-radius-15">
+          <navigation></navigation>
         </div>
-        <router-view/>
       </div>
+      <router-view/>
+    </div>
   </div>
 </template>
+
+<script>
+
+import Navigation from './components/Navigation.vue';
+
+export default {
+  name: 'App',
+  components: {
+    Navigation,
+  },
+};
+
+</script>
 
 <style>
 #app {
@@ -52,6 +44,38 @@ html {
 
 .background {
   background: url('assets/tenniscourt.jpg') no-repeat center center / cover
+}
+
+.invisible {
+  visibility: hidden !important;
+}
+
+.black-border {
+  background: white;
+  border: 2px solid black !important;
+}
+
+.border-radius-15 {
+  border-radius: 15px !important;
+}
+
+.row {
+  margin: 10px;
+  padding: 10px;
+}
+
+.card-text {
+  text-align: left;
+}
+
+.large {
+  font-size: 125%;
+  margin: 0px;
+  width: 100%;
+}
+
+.td-right {
+  text-align: right;
 }
 
 </style>
