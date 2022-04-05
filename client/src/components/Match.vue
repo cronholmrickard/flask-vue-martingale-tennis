@@ -28,7 +28,6 @@
               <td class="td-right">
                 <button
                 class="btn btn-primary"
-                id="homeBtn"
                 v-if="match !== null"
                 v-on:click="handleBet(match.Home)">
                     {{ parseFloat(match["Home"]["Odds"]).toFixed(2) }}
@@ -45,7 +44,6 @@
               <td class="td-right">
                 <button
                 class="btn btn-primary"
-                id="awayBtn"
                 v-if="match !== null"
                 v-on:click="handleBet(match.Away)">
                     {{ parseFloat(match["Away"]["Odds"]).toFixed(2) }}
@@ -88,12 +86,5 @@ export default {
 </script>
 
 <style scoped>
-
-#homeBtn, #awayBtn{
-  background-color: #d37969 !important;
-  border: 2px solid black !important;
-  color: black !important;
-  border-radius: 15px !important;
-}
 
 </style>

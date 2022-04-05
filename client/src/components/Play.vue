@@ -22,7 +22,7 @@
               context of betting on tennis matches. Let's find out if you get bankrupted or
               break the bank. Serve whenever you are ready!
             </p>
-            <button class="tennisball btn btn-primary" @click="serve">
+            <button class="btn btn-primary" @click="serve">
               Serve
             </button>
           </div>
@@ -116,12 +116,14 @@ export default {
           xAxes: [{
             scaleLabel: {
               labelString: 'Bets',
+              fontSize: 22,
               display: true,
             },
           }],
           yAxes: [{
             scaleLabel: {
               labelString: 'Bankroll',
+              fontSize: 22,
               display: true,
             },
             ticks: {
@@ -133,8 +135,14 @@ export default {
       },
       pieData: null,
       pieOptions: {
-        cutoutPercentage: 40,
+        cutoutPercentage: 50,
         rotation: Math.PI,
+        legend: {
+          display: true,
+          labels: {
+            fontSize: 16,
+          },
+        },
       },
     };
   },
@@ -202,7 +210,7 @@ export default {
     createPieData(roiData) {
       // create data for pie chart
       this.pieData = {
-        labels: ['Bankrpupcy', 'Wins'],
+        labels: ['Bankrupt', 'Profit'],
         datasets: [{
           data: [roiData.negative, roiData.positive],
           backgroundColor: [
@@ -280,13 +288,6 @@ export default {
 </script>
 
 <style scoped>
-
-.tennisball {
-  background-color: #dfff4f !important;
-  border: 2px solid black !important;
-  color: black !important;
-  border-radius: 15px !important;
-}
 
 .grid-container {
   display: grid;
