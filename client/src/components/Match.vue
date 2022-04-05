@@ -18,35 +18,19 @@
               <th>Ranking</th>
               <th class="td-right" style="padding-right: 5px;">Odds</th>
             </tr>
-            <tr>
-              <td v-if="match !== null" style="vertical-align: middle">
-                {{ match["Home"]["Name"] }}
+            <tr v-for="player in playerOrder" v-bind:key="player">
+              <td v-if="match !== null">
+                {{ match[player]["Name"] }}
               </td>
-              <td v-if="match !== null" style="vertical-align: middle">
-                {{ match["Home"]["Rank"] }}
-              </td>
-              <td class="td-right">
-                <button
-                class="btn btn-primary"
-                v-if="match !== null"
-                v-on:click="handleBet(match.Home)">
-                    {{ parseFloat(match["Home"]["Odds"]).toFixed(2) }}
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td v-if="match !== null" style="vertical-align: middle">
-                {{ match["Away"]["Name"] }}
-              </td>
-              <td v-if="match !== null" style="vertical-align: middle">
-                {{ match["Away"]["Rank"] }}
+              <td v-if="match !== null">
+                {{ match[player]["Rank"] }}
               </td>
               <td class="td-right">
                 <button
                 class="btn btn-primary"
                 v-if="match !== null"
-                v-on:click="handleBet(match.Away)">
-                    {{ parseFloat(match["Away"]["Odds"]).toFixed(2) }}
+                v-on:click="handleBet(match[player])">
+                    {{ parseFloat(match[player]["Odds"]).toFixed(2) }}
                 </button>
               </td>
             </tr>
@@ -73,6 +57,10 @@ export default {
         'Round',
         'Court',
         'Surface',
+      ],
+      playerOrder: [
+        'Home',
+        'Away',
       ],
     };
   },
