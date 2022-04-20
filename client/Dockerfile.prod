@@ -5,15 +5,16 @@ LABEL MAINTAINER="Rickard Cronholm <rickard.cronholm@gmail.com>"
 
 WORKDIR /app
 
-ARG API_IP=$(curl -s https://api.ipify.org)
-ARG API_URL="http://${API_IP}:5000/api/"
-
 ENV PATH=/app/node_modules/.bin:$PATH
 
 COPY package.json /app/package.json
 COPY . /app
 
-RUN echo "VUE_APP_API_URL=${API_URL}" > /app/.env && \
+RUN apk update && \
+    apk add curl && \
+    API_IP=$(curl -s https://api.ipify.org) && \
+    echo "VUE_APP_API_URL=http://${API_IP}:5000/api/" > /app/.env && \
+    cat /app/.env && \
     npm install --silent && \
     npm install -g @vue/cli@4.5.11 && \
     npm install axios@0.21.1 --save && \
