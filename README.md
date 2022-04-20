@@ -6,7 +6,7 @@ Considering a coin toss, the matringale betting strategy is designed for a game 
 See the [wikipage](https://en.wikipedia.org/wiki/Martingale_(probability_theory))
 
 ## Live Demo
-Live demo is currently offline
+Live demo is available at [16.171.56.181](http://16.171.56.181)
 
 ## Running the application locally
 The application stack can be run locally through;
@@ -21,6 +21,7 @@ The application is an interactive experience, where the user places bets on tenn
 At the end of a game (either after 50 bets or earlier if you get bankrupted), the historical distribution of bankrupcies/wins will be displayed.
 
 ### Development log
+- __2022-04-21__: Relaunced live demo
 - __2022-04-14__: Live demo offline
 - __2022-04-06__: Launched live demo
 - __2022-04-05__: Refactored frontend 
