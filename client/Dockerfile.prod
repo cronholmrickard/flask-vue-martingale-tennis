@@ -6,7 +6,6 @@ LABEL MAINTAINER="Rickard Cronholm <rickard.cronholm@gmail.com>"
 WORKDIR /app
 
 ARG API_IP=$(curl -s https://api.ipify.org)
-ARG API_IP=192.168.86.132
 ARG API_URL="http://${API_IP}:5000/api/"
 
 ENV PATH=/app/node_modules/.bin:$PATH
