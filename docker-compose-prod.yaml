@@ -43,9 +43,7 @@ services:
   frontend:
     build:
       context: client
-      dockerfile: Dockerfile
-      args:
-        API_URL: http://10.0.1.100:5000/api/
+      dockerfile: Dockerfile.prod
     container_name: frontend
     restart: unless-stopped
     ports:

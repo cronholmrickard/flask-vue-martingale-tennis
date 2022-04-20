@@ -84,7 +84,7 @@ import ReactiveLineChart from '../classes/ReactiveLineChart';
 import ReactivePieChart from '../classes/ReactivePieChart';
 
 const nMatches = 50;
-const apiUrl = 'http://10.0.1.100:5000/api/';
+const apiUrl = process.env.VUE_APP_API_URL;
 const betStat = new BetStatClass();
 
 export default {

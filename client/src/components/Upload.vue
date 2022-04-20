@@ -44,7 +44,8 @@ export default {
       error: '',
       status: '',
       dropzoneOptions: {
-        url: 'http://10.0.1.100:5000/api/tournament',
+        // eslint-disable-next-line
+        url: process.env.VUE_APP_API_URL + 'tournament',
         thumbnailWidth: 200,
         maxFiles: 10,
         maxFileSize: 0.1,
